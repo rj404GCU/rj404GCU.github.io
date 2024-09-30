@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebecca's Portfolio</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+
+<header id="top-of-page">
+    <h1>Rebecca's Portfolio</h1>
+</header>
+
+<!-- Simple Navigation Section -->
+<div class="nav-container">
+    <nav>
+        <a href="index.html">Project Overview</a>
+        <a href="background.html">Background</a>
+        <a href="designDocs.html">Design Diagrams</a>
+        <a href="code.html">Code Snippets</a>
+        <a href="approach.html">Implementation Approach</a>
+        <a href="instructions.html">Instructions</a>
+    </nav>
+</div>
+<br>
+
+<section id="code-3cs">
+    
+    <!-- Section Links -->
+    <div class="link-box">
+        <a class="section-links" href="#validation">Validation & Encryption</a>
+        <a class="section-links" href="#dao">Security & Data Access Object</a>
+        <a class="section-links" href="#code-3cs">Code, Comments & Consistancy</a>
+        <a class="section-links" href="#n-layer">N-Layer Architecture</a>
+    </div>
+
+    <h1>Code Features</h1>
+    <h2>Code, Comments & Consistancy</h2>
+    <p>The application keeps things consistent with the naming of objects and variables, making it easy to read and understand. Plus, the code is well documented for clarity. To keep the app's integrity intact, I followed the N-layer architecture for a solid separation of concerns and put in place strong data validation to ensure data quality and reliability. This can be seen in the code snippets through this page and the project.</p>
+    <img src="Images/comments.png"  alt="Comments">
+</section>
+
+
+<section id="n-layer">
+    <h2>N-Layer Architecture</h2>
+    <p>This show the hieachy of the projct folder that helps demostrate that the N-Layer archtechture was used in this project.</p>
+    <img src="Images/files.png"  alt="N-Layer">
+    <br>
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<section id="validation">
+
+    <h2>Validation & Encryption</h2>
+    <p>The following code snippets that show how to the app uses session variables to validation and manage user sessions. This focuses on what to do after a user logs in, making sure access is secure and navigation is tailored to each user, teacher or student. Further validation is then done through the N-layer architechture of the application to the Database object to validate user information is valid by varifying user information through business services and SQL queries with the database.</p>
+    
+    <h3>Session Variables </h3>
+    <div class="code-snippet">
+        <pre><code>
+            //Dependency Injection for session tracking.
+            private readonly IHttpContextAccessor _context;
+
+            /// constructor of the login controller using dependency injection 
+            /// for session variables
+            public LoginController(IHttpContextAccessor context)
+            {
+                _context = context;
+            }
+        </code></pre>
+    </div>
+
+    <div class="code-snippet">
+        <pre><code>
+            public IActionResult Index()
+            {
+                //varify logged in for nav bar
+                if (_context.HttpContext.Session.GetInt32("Id") != null || _context.HttpContext.Session.GetInt32("Id") > 0)
+                {
+                    ViewBag.Logout = false;
+                    ViewBag.IsTeacher = (((int)_context.HttpContext.Session.GetInt32("IsTeacher")) == 1) ? true : false;
+                    //redirects to home
+                    return View();
+                }
+                else
+                {
+                    ViewBag.IsTeacher = false;
+                    ViewBag.Logout = true;
+                }
+           
+                return View();
+            }
+        </code></pre>
+    </div>
+    <h3>Form Validation</h3>
+    <div class="code-snippet">
+        <pre><code>
+            //Additional code in application
+            ...
+            
+            [Required]
+            [DisplayName("Test Name")]
+            public string? TestName { get; set; }
+
+            [Required]
+            [DisplayName("Number Of Questions in Test")]
+            [Range(1, 25)]
+            public int NumOfQuestions { get; set; } = 0;
+
+            //Additional code in application
+            ...
+        </code></pre>
+    </div>
+
+    <div class="code-snippet">
+        <pre><code>
+            //Additional code in application
+            ...
+            
+                [Required]
+                [DisplayName("First Name")]
+                public string? FirstName { get; set; }
+                [Required]
+                [DisplayName("Last Name")]
+                public string? LastName { get; set; }
+
+                [Required]
+                [EmailAddress]
+                public string? Email { get; set; }
+
+                [Required]
+                [StringLength(20, MinimumLength = 6)]
+                public string? Password { get; set; }
+
+                [Required]
+                [StringLength(20, MinimumLength = 6)]
+                public string? Username { get; set; }
+            
+            //Additional code in application
+            ...
+        </code></pre>
+    </div>
+
+    <h3>User Login Validation</h3>
+    <div class="code-snippet">
+        <pre><code>
+            public IActionResult Login(UserModel user)
+            {
+                //Instantiate the security class
+                UserAccessService userAccess = new UserAccessService();
+                UserModel userModel = new UserModel();
+           
+                //Retrive user data
+                userModel = userAccess.GetUserData(user);
+           
+                if (userAccess.ValidateLogin(user) == false)
+                {
+                    ViewBag.Logout = true;
+                    ViewBag.Message = "Login Information is Invalid.";
+                    return View("Index", user);
+                }
+                //Additional code in application
+                ...
+            }
+        </code></pre>
+    </div>
+
+    <div class="code-snippet">
+        
+        <pre><code>
+            public bool ValidateLogin(UserModel user)
+            {
+                //Additional code in application
+                ...
+
+                // Define the value of the two placeholders
+                command.Parameters.Add("@username", System.Data.SqlDbType.VarChar, 40).Value = user.Username;
+
+                // Using try catch when operating a db just in case there is an exception
+                try
+                {
+                    // Use the connection object
+                    connection.Open();
+                    // Execute the query and read the results
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    //FInd User by username in database
+                    UserModel comparedUser = GetUserByUsername(user.Username, user.IsTeacher);
+
+                    //confirm encryption value matches for account password
+                    bool verifiedPassword = user.VerifyPassword(user, user.Password, comparedUser.Password);
+
+                    // Rows found and Password valid?
+                    if (reader.HasRows && verifiedPassword)
+                    {
+                        // Update the flag so we can return that our user was found
+                        isSuccessful = true;
+                    }
+                }
+
+                //Additional code in application
+                ...
+            }
+        </code></pre>
+    </div>
+
+    <h3>Password Encryption</h3>
+    <p> The following is a small but vital step in securing the application to ensure user data is protected. In this case, it shows the use of hashing with salt to ensure password are safe even in a databreach. Additionally, it also shows the verification of the hashed password in the database to ensure that common rainbow table attacks can not be attempted due to the salt implemented in th inital hashing of the password.</p>
+
+    <div class="code-snippet">
+        <pre><code>
+            /// Encrypts provided plain text password and returns encrypted value
+            public string EncryptPassword(UserModel user, string password)
+            {
+                // Hash the password with salt
+                return _passwordHasher.HashPassword(user, password);
+            }
+        </code></pre>
+    </div>
+
+    <div class="code-snippet">
+        <pre><code>
+
+            /// Verifies password is correct
+            public bool VerifyPassword(UserModel user, string enteredPassword, string storedPassword)
+            {
+                var result = _passwordHasher.VerifyHashedPassword(user, storedPassword, enteredPassword);
+    
+                // Check if the password is correct
+                return result == PasswordVerificationResult.Success;
+            }
+        </code></pre>
+    </div>
+
+    <h3>Exception Handling - Updating Account Information</h3>
+    <p>Consistant use of try, using and other data validation checks have been made to ensure that if an exception occurs that it is handled.</p>
+    <div class="code-snippet">
+        <pre><code>
+        //Additional code in application
+                ...
+
+            try
+            {
+                //Flag changes were made
+                bool changedUser = false;
+           
+                //Get User and compare data
+                user = userAccess.GetUserData(user); //gets old data for user
+                ViewBag.IsTeacher = user.IsTeacher;
+                (changedUser, user) = user.CompareUsers(newUser, user); //compares old data with new
+           
+                //Update user
+                if (user.UserId > 0 && changedUser)
+                {
+                    ViewBag.Message = (!userAccess.UpdateUser(user)) ? "Update Failed." : "User Updated.";
+           
+                    // return updated user details
+                    return View("Update", userAccess.GetUserData(user));
+                }
+           
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("User update error. Exception occurred: " + ex.Message);
+            }
+
+        //Additional code in application
+                ...
+        </code></pre>
+        
+    </div>
+
+    <div class="code-snippet">
+        <pre><code>
+            //Additional code in application
+                ...
+                // Using statement to endure objects are disposed of correctly
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    // Instantiate SqlCommand and pass the constructor the query and connection
+                    SqlCommand command = new SqlCommand(sqlStatement, connection);
+
+                    // Define the value of the sql placeholders
+                    if (test != null)
+                    {
+                        command.Parameters.Add("@TestId", System.Data.SqlDbType.Int).Value = test.TestId;
+                        command.Parameters.Add("@TeacherId", System.Data.SqlDbType.Int).Value = test.teacherId;
+                    }
+
+                    // Using try catch when operating a db just in case there is an exception
+                    try
+                    {
+                        // Use the connection object
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            // Rows found?
+                            if (reader.HasRows)
+                            {
+                                    isSuccessful = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("UNABLE TO CONFIRM TEST :  " + DateTime.Now + " \n \t" + ex.Message);
+                    }
+                }
+            //Additional code in application
+            ...
+        </code></pre>
+    </div>
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<section id="dao">
+    <h2>Data Access Object</h2>
+    <p>This part outlines the methods used to access the database in the application. The application has to travel through the layers of the N-Layer architechture to reach the database access object. From their is must use the private connection string to access the database and mach queries into the SQL database. The following are some examples of those queries.</p>
+
+    <div class="code-snippet">
+        <pre><code>
+            internal bool DeleteTest(int testId, int teacherId)
+            {
+                
+                // Instantiate SqlCommand and pass the constructor the query and connection
+                string sqlStatement = "DELETE FROM dbo.[Tests] WHERE TeacherId = @TeacherId AND TestId = @TestId";
+           
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    SqlCommand command = new SqlCommand(sqlStatement, connection);
+           
+                    // Define the value of the placeholder
+                    command.Parameters.Add("@TestId", System.Data.SqlDbType.Int, 40).Value = testId;
+                    command.Parameters.Add("@TeacherId", System.Data.SqlDbType.Int, 40).Value = teacherId;
+                    // define the values of the two placeholders in the sq1Statement
+                    try
+                    {
+                        connection.Open();
+                        int rowsAffected = command.ExecuteNonQuery();
+           
+                        if (rowsAffected > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+           
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    return false;
+                }
+            }
+
+        </code></pre>
+    </div>
+
+    <div class="code-snippet">
+        <pre><code>
+
+internal bool HasSubmission(int testId, int userId)
+{
+    bool isSuccessful = false;
+
+    string sqlStatement = "SELECT * FROM dbo.SubmittedTests WHERE StudentId = @StudentId AND TestId = @TestId;";
+   
+    // Using statement to endure objects are disposed of correctly
+    using (SqlConnection connection = new SqlConnection(connStr))
+    {
+        // Instantiate SqlCommand and pass the constructor the query
+        // and connection
+        SqlCommand command = new SqlCommand(sqlStatement, connection);
+
+        if (testId != 0 && userId != 0)
+        {
+            // Define the value of the placeholder
+            command.Parameters.Add("@StudentId", System.Data.SqlDbType.Int).Value = userId;
+            command.Parameters.Add("@TestId", System.Data.SqlDbType.Int).Value = testId;
+        }
+
+        try
+        {
+            // Use the connection object
+            connection.Open();
+            using (SqlDataReader reader = command.ExecuteReader())
+            {
+                // Rows found?
+                if (reader.HasRows)
+                {
+                    // Update the flag so we know if student tested before
+                    isSuccessful = true;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        Console.WriteLine("The student has " + (isSuccessful ? "" : "NOT") + " taken the submission.");
+
+        // Return the result
+        return isSuccessful;
+    }
+}
+        </code></pre>
+    </div>
+    <div class="code-snippet">
+        <pre><code>
+            public int CreateTest(TestModel test, int teacherId)
+            {
+                // Declare and initialize flag as false 
+                int insertedId = -1;
+           
+                //create the update query string [SELECT SCOPE_IDENTITY return new id of last insert]
+                string sqlStatement = "INSERT INTO dbo.Tests(Questions, Active, NumOfQuestions, TestName, TeacherId) " +
+                                        "VALUES(@Questions, @ActiveTest, @NumOfQuestions, @TestName, @TeacherId); SELECT SCOPE_IDENTITY();";
+           
+           
+                // Using statement to endure objects are disposed of correctly
+                using (SqlConnection connection = new SqlConnection(connStr))
+                {
+                    // Instantiate SqlCommand and pass the constructor the query and connection
+                    SqlCommand command = new SqlCommand(sqlStatement, connection);
+           
+                    // Define the value of the sql placeholders
+                    if (test != null)
+                    {
+                        command.Parameters.Add("@Questions", System.Data.SqlDbType.VarChar, -1).Value = test.QuestionsJson.ToJson();
+                        command.Parameters.Add("@ActiveTest", System.Data.SqlDbType.TinyInt).Value = test.ActiveTest;
+                        command.Parameters.Add("@NumOfQuestions", System.Data.SqlDbType.Int).Value = test.NumOfQuestions;
+                        command.Parameters.Add("@TestName", System.Data.SqlDbType.VarChar, 40).Value = test.TestName;
+                        command.Parameters.Add("@TeacherId", System.Data.SqlDbType.Int).Value = teacherId;
+                    }
+           
+                    // Using try catch when operating a db just in case there is an exception
+                    try
+                    {
+                        // Use the connection object
+                        connection.Open();
+           
+                        //Excute Scaler  returns submission ID
+                        insertedId = Convert.ToInt32(command.ExecuteScalar());
+           
+                        if (insertedId == 0)
+                        {
+                            Console.WriteLine("UNABLE TO CREATE TEST : " + DateTime.Now + " \n \t" + " .");
+                        }
+                        else
+                        {
+                            Console.WriteLine("TEST CREATED : " + DateTime.Now);
+                        }
+           
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("UNABLE TO CREATE TEST :  " + DateTime.Now + " \n \t" + ex.Message);
+                    }
+                }
+           
+                return insertedId;
+            }
+
+        </code></pre>
+    </div>
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<footer>
+    <p> 2024 Rebecca's Capstone Portfolio </p>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebecca's Portfolio</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
+</head>
+<body>
+
+<header id="top-of-page">
+    <h1>Rebecca's Portfolio</h1>
+</header>
+
+<!-- Simple Navigation Section -->
+<div class="nav-container">
+    <nav>
+        <a href="index.html">Project Overview</a>
+        <a href="designDocs.html">Design Diagrams</a>
+        <a href="code.html">Code Snippets</a>
+        <a href="#supporting-artifacts">Supporting Artifacts</a>
+        <a href="#implementation-approach">Implementation Approach</a>
+        <a href="#instructions">Instructions</a>
+    </nav>
+</div>
+
+<br>
+
+<section >
+    <!-- Section Links -->
+    <div class="link-box">
+        <a class="section-links" href="#arch-diagram">Architecture Diagram</a>
+        <a class="section-links" href="#site-map">Site Map Of Application</a>
+        <a class="section-links" href="#flow-chart">Flow of Application Chart</a>
+        <a class="section-links" href="#flow-of-info">Information Flow</a>
+    </div>
+
+    <h1>Design Documents</h1>
+    <p>This section includes visual representations of the project's architecture, such as wireframes, flowcharts, and system diagrams. These diagrams help illustrate the structure of the application, the flow of data, and the user experience, providing a clearer understanding of how the different components interact.</p>
+    <br>
+    <h3>Wire Frames</h3>
+    <div class="image-container"></div>
+        <h4>Overall Look and Feel - Home Page</h4>
+        <img src="Images/homepage.png"  alt="Home Page">
+
+        <p>I wanted to make sure the application is super easy to use for everyone. The design is all about keeping things simple but still looking good, using bright colors to help users with disabilities. By focusing on both looks and usability, the application is all about creating a welcoming experience for everyone. Additionally, I wanted predictability so users can easily guess where a link, button or page will lead them or what it would do.</p>
+    </div>
+
+    <br>
+    <div class="image-container">
+        <h4>Login Page For All Users</h4>
+        <img src="Images/login.png" alt="Login Page">
+        <figcaption>The use of a toggle switch allows both students and teachers to login from this page. </figcaption>
+    </div>
+
+    <br>
+    <div class="image-container">
+        <h4>Registration Page For All Users</h4>
+        <img src="Images/register.png" alt="Registration">
+        <figcaption>The use of a toggle switch allows both students and teachers to register accounts from this page. </figcaption>
+    </div>
+
+    <br>
+    <div class="image-container">
+        <h4>My Account for Students</h4>
+        <img src="Images/studentAcct.png" alt="Student Account">
+        
+    </div>
+
+    <div class="image-container">
+        <h4>My Account For Teachers </h4>
+        <img src="Images/teacherAcct.png" alt="Teacher Account">
+        <figcaption>Notice the Navigation bar shows different pages accessible for teachers verse students.</figcaption>
+    </div>
+
+    <div class="image-container">
+        <h4>Take a Test for Students</h4>
+        <img src="Images/TakeTestModel.png" alt="Take Test Modal">
+        <figcaption>Test Id's are provided by teachers to students to gain access to test.</figcaption>
+    </div>
+
+    <div class="image-container"></div>
+        <h4>Add Class Modal For Students</h4>
+        <img src="Images/StudentAddClassModel.png" alt="Add CLass for students">
+        <figcaption>Codes are provided by teachers to students to add classes to their profiles.</figcaption>
+    </div>
+
+    <div class="image-container"></div>
+        <h4>Add Class Modal For Teachers</h4>
+        <img src="Images/teacherAddClassMOdal.png" alt="Add Class for teachers">
+        <figcaption>Teachers are able to easily create classes with just a name.</figcaption>
+    </div>
+
+    <div class="image-container">
+        <h4>Update Account Information - for all users</h4>
+        <img src="Images/userAcctsUpdate.png" alt="Account Update">
+        <figcaption>The update account between users are virtually the same except the type of the account is listed on the page, see the blue boxes in the image.</figcaption>
+    </div>
+
+    <div class="image-container">
+        <h4>Student's 'Take a Test'</h4>
+        <img src="Images/studentTakeTest.png" alt="Take A Test page">
+    </div>
+
+    <div class="image-container">
+        <h4>Teacher Test Creation Process</h4>
+        <h5>Step 1: Create Test Modal</h5>
+        <img src="Images/createTestpt1.png" alt="Create Test Part 1">
+        <figcaption>Name the test and determine question count.</figcaption>
+
+        <h5>Step 2: Update Test Page</h5>
+        <img src="Images/editOrCreateTest.png" alt="Create Test Part 2">
+        <figcaption>Update Questions and Answers</figcaption>
+    </div>
+    <div class="image-container">
+        <h4>Update/Edit Tests</h4>
+        <img src="Images/editOrCreateTest.png" alt="Update Test">
+        <figcaption>Update questions, answers or activate/deactivate tests.</figcaption>
+    </div>
+
+    <div class="image-container">
+        <h4>Viewing All Tests</h4>
+        <img src="Images/viewAllTests.png" alt="View All Tests">
+    </div>
+
+    <div class="image-container">
+        <h4>Delete Test Modal</h4>
+        <img src="Images/deleteTest.png" alt="Delete Test Modal">
+        <figcaption>Tests can easily be delete with the test ID.</figcaption>
+    </div>
+
+    <div class="image-container">
+        <h4>Submissions</h4>
+        <img src="Images/submissions.png" alt="Submissions">
+    </div>
+
+    <div class="image-container">
+        <h4>Student Submission for Teachers Only</h4>
+        <img src="Images/submissionView.png" alt="Student Submission">
+    </div>
+
+    <div class="image-container">
+        <h4>User Alerts</h4>
+        <img src="Images/alerts.png" alt="Page Alerts">
+        <figcaption>Alerts for users will be displayed on all necessary pages under the page titles.</figcaption>
+        <div class="link-box">
+            <a class="section-links" href="#top-of-page">Go to Top</a>
+        </div>
+    </div>
+                
+</section>
+
+<section id="arch-diagram">
+    <h2>Architecture Diagram</h2>
+    <img src="Images/archDia.png" alt="Architecture Diagram">
+    <figcaption>A diagram of the logical architecture of the system.</figcaption>
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<section id="site-map">
+    <h2>Site Map Of Application</h2>
+    <img src="Images/siteMap.png" alt="Site Map">
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<section id="flow-chart">
+    <h2>Flow Of Application</h2>
+    <img src="Images/flowchart.png" alt="Flow Of Application">
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+<section id="flow-of-info">
+    <h2>Flow Of Information</h2>
+    <img src="Images/flowOfInfo.png" alt="Flow Of Information">
+    <figcaption>This shows how information will interact with teacher and students.</figcaption>
+    <div class="link-box">
+        <a class="section-links" href="#top-of-page">Go to Top</a>
+    </div>
+</section>
+
+
+
+<footer>
+    <p> 2024 Rebecca's Capstone Portfolio </p>
+</footer>
+
+
+</body>
+</html>
