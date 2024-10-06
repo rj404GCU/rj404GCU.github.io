@@ -6,7 +6,5 @@ Developer Profolio
 
 - [QuizItApp](https://quizitapp.azurewebsites.net/) - Web Application
 
-- [Portfolio](https://https://rj404gcu.github.io/)
-
 - [Portfolio](https://rj404gcu.github.io/).
 
